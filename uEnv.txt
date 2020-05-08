@@ -1,0 +1,35 @@
+autoload=no
+baudrate=115200
+console=ttyO0,115200n8
+bootargs_defaults=setenv bootargs console=${console} ${optargs}
+bootdelay=3
+bootenv=uEnv.txt
+bootfile=zImage
+dtb=am335x-mitysom-illinisat2.dtb
+earlyprintk=ttyO0,115200n8
+ip_method=none
+kloadaddr=0x80007fc0
+fdtaddr=0x88000000
+fdt_high=0xFFFFFFFF
+loadaddr=0x82000000
+nand_img_size=0x500000
+nand_fdt_size=0xC800
+nand_root=ubi0:rootfs rw ubi.mtd=9,4096
+nand_root_fs_type=ubifs rootwait=1
+nand_src_addr=0x00340000
+nand_fdt_addr=0x00840000
+#mmc_args=setenv bootargs ${bootargs} root=${mmc_root} rootfstype=${mmc_root_fs_type} ip=${ip_method}
+#mmc_boot=run mmc_args; run mmc_load_image; run mmc_load_fdt; bootz ${kloadaddr} - ${fdtaddr}
+#mmc_dev=0
+#mmc_load_image=fatload mmc ${mmc_dev} ${kloadaddr} ${bootfile}
+#mmc_load_fdt=fatload mmc ${mmc_dev} ${fdtaddr} ${dtb}
+#mmc_root=/dev/mmcblk0p2 rw
+#mmc_root_fs_type=ext3 rootwait
+mmc_boot=setenv fdtaddr 0x88000000; setenv fdt_high 0xFFFFFFFF; setenv kloadaddr 0x80007FC0; fatload mmc 0 $kloadaddr zImage; fatload mmc 0 $fdtaddr am335x-mitysom-illinisat2.dtb; setenv console "ttyO0,115200n8"; run mmc_args; saveenv; bootz $kloadaddr - $fdtaddr
+nand_args=run bootargs_defaults;setenv bootargs ${bootargs} root=${nand_root} noinitrd rootfstype=${nand_root_fs_type} ip=${ip_method}
+nand_boot=echo Adam and Dillon were here!; run nand_args; nand read.i ${kloadaddr} ${nand_src_addr} ${nand_img_size}; nand read.i ${fdtaddr} ${nand_fdt_addr} ${nand_fdt_size}; saveenv; bootz ${kloadaddr} - ${fdtaddr}
+stderr=serial
+stdin=serial
+stdout=serial
+mtdparts=mtdparts=nand:256k@0(mlo),256k@256k(mlo1),256k@512k(mlo2),256k@768k(mlo3),2m@1m(uboot),256k@3m(env),5m@3328k(kernel),256k@8448k(dtb),-@8704k(userfs)
+

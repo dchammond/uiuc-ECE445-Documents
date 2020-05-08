@@ -1,0 +1,229 @@
+/dts-v1/;
+
+#include "am335x-mitysom-common.dtsi"
+#include "am335x-mitysom-512M.dtsi"
+
+&am33xx_pinmux {
+	gpio2_pins_default: gpio2_pins_default {
+		pinctrl-single,pins = <
+			AM33XX_IOPAD(0x93c, PIN_INPUT_PULLUP | MUX_MODE7) /* (L15) gmii1_rxd1.gpio2[20] (ANTENNA CTRL) */
+		>;
+	};
+
+	mmc0_pins_default: mmc0_pins_default {
+		pinctrl-single,pins = <
+			AM33XX_IOPAD(0x900, PIN_INPUT_PULLUP | MUX_MODE0) /* (G17) mmc0_clk.mmc0_clk */
+			AM33XX_IOPAD(0x904, PIN_INPUT_PULLUP | MUX_MODE0) /* (G18) mmc0_cmd.mmc0_cmd */
+			AM33XX_IOPAD(0x8fc, PIN_INPUT_PULLUP | MUX_MODE0) /* (G16) mmc0_dat0.mmc0_dat0 */
+			AM33XX_IOPAD(0x8f8, PIN_INPUT_PULLUP | MUX_MODE0) /* (G15) mmc0_dat1.mmc0_dat1 */
+			AM33XX_IOPAD(0x8f4, PIN_INPUT_PULLUP | MUX_MODE0) /* (F18) mmc0_dat2.mmc0_dat2 */
+			AM33XX_IOPAD(0x8f0, PIN_INPUT_PULLUP | MUX_MODE0) /* (F17) mmc0_dat3.mmc0_dat3 */
+		>;
+	};
+
+	mmc1_pins_default: mmc1_pins_default {
+		pinctrl-single,pins = <
+			AM33XX_IOPAD(0x880, PIN_INPUT_PULLUP | MUX_MODE2) /* (U9) gpmc_csn1.mmc1_clk */
+			AM33XX_IOPAD(0x884, PIN_INPUT_PULLUP | MUX_MODE2) /* (V9) gpmc_csn2.mmc1_cmd */
+			AM33XX_IOPAD(0x820, PIN_INPUT_PULLUP | MUX_MODE2) /* (U10) gpmc_ad8.mmc1_dat0 */
+			AM33XX_IOPAD(0x824, PIN_INPUT_PULLUP | MUX_MODE2) /* (T10) gpmc_ad9.mmc1_dat1 */
+			AM33XX_IOPAD(0x828, PIN_INPUT_PULLUP | MUX_MODE2) /* (T11) gpmc_ad10.mmc1_dat2 */
+			AM33XX_IOPAD(0x82c, PIN_INPUT_PULLUP | MUX_MODE2) /* (U12) gpmc_ad11.mmc1_dat3 */
+			AM33XX_IOPAD(0x830, PIN_INPUT_PULLUP | MUX_MODE2) /* (T12) gpmc_ad12.mmc1_dat4 */
+			AM33XX_IOPAD(0x834, PIN_INPUT_PULLUP | MUX_MODE2) /* (R12) gpmc_ad13.mmc1_dat5 */
+			AM33XX_IOPAD(0x838, PIN_INPUT_PULLUP | MUX_MODE2) /* (V13) gpmc_ad14.mmc1_dat6 */
+			AM33XX_IOPAD(0x83c, PIN_INPUT_PULLUP | MUX_MODE2) /* (U13) gpmc_ad15.mmc1_dat7 */
+		>;
+	};
+
+	mmc2_pins_default: mmc2_pins_default {
+		pinctrl-single,pins = <
+			AM33XX_IOPAD(0x88c, PIN_INPUT_PULLUP | MUX_MODE3) /* (V12) gpmc_clk.mmc2_clk */
+			AM33XX_IOPAD(0x888, PIN_INPUT_PULLUP | MUX_MODE3) /* (T13) gpmc_csn3.mmc2_cmd */
+			AM33XX_IOPAD(0x844, PIN_INPUT_PULLUP | MUX_MODE3) /* (V14) gpmc_a1.mmc2_dat0 */
+			AM33XX_IOPAD(0x848, PIN_INPUT_PULLUP | MUX_MODE3) /* (U14) gpmc_a2.mmc2_dat1 */
+			AM33XX_IOPAD(0x84c, PIN_INPUT_PULLUP | MUX_MODE3) /* (T14) gpmc_a3.mmc2_dat2 */
+			AM33XX_IOPAD(0x878, PIN_INPUT_PULLUP | MUX_MODE3) /* (U18) gpmc_be1n.mmc2_dat3 */
+			AM33XX_IOPAD(0x858, PIN_INPUT_PULLUP | MUX_MODE3) /* (U15) gpmc_a6.mmc2_dat4 */
+			AM33XX_IOPAD(0x85c, PIN_INPUT_PULLUP | MUX_MODE3) /* (T15) gpmc_a7.mmc2_dat5 */
+			AM33XX_IOPAD(0x860, PIN_INPUT_PULLUP | MUX_MODE3) /* (V16) gpmc_a8.mmc2_dat6 */
+			AM33XX_IOPAD(0x864, PIN_INPUT_PULLUP | MUX_MODE3) /* (U16) gpmc_a9.mmc2_dat7 */
+		>;
+	};
+
+	uart0_pins_default: uart0_pins_default {
+		pinctrl-single,pins = <
+			AM33XX_IOPAD(0x970, PIN_INPUT_PULLUP | MUX_MODE0) /* (E15) uart0_rxd.uart0_rxd */
+			AM33XX_IOPAD(0x974, PIN_OUTPUT_PULLUP | MUX_MODE0) /* (E16) uart0_txd.uart0_txd */
+		>;
+	};
+
+	uart1_pins_default: uart1_pins_default {
+		pinctrl-single,pins = <
+			AM33XX_IOPAD(0x980, PIN_INPUT_PULLUP | MUX_MODE0) /* (D16) uart1_rxd.uart1_rxd */
+			AM33XX_IOPAD(0x984, PIN_OUTPUT_PULLUP | MUX_MODE0) /* (D15) uart1_txd.uart1_txd */
+		>;
+	};
+
+	uart2_pins_default: uart2_pins_default {
+		pinctrl-single,pins = <
+			AM33XX_IOPAD(0x950, PIN_INPUT_PULLUP | MUX_MODE1) /* (A17) spi0_sclk.uart2_rxd */
+			AM33XX_IOPAD(0x954, PIN_OUTPUT_PULLUP | MUX_MODE1) /* (B17) spi0_d0.uart2_txd */
+			AM33XX_IOPAD(0x988, PIN_INPUT_PULLUP | MUX_MODE2) /* (C17) I2C0_SDA.uart2_ctsn */
+			AM33XX_IOPAD(0x98c, PIN_OUTPUT_PULLUP | MUX_MODE2) /* (C16) I2C0_SCL.uart2_rtsn */
+		>;
+	};
+
+	uart3_pins_default: uart3_pins_default {
+		pinctrl-single,pins = <
+			AM33XX_IOPAD(0x934, PIN_INPUT_PULLUP | MUX_MODE1) /* (L17) gmii1_rxd3.uart3_rxd */
+			AM33XX_IOPAD(0x938, PIN_OUTPUT_PULLUP | MUX_MODE1) /* (L16) gmii1_rxd2.uart3_txd */
+            AM33XX_IOPAD(0x928, PIN_OUTPUT_PULLDOWN | MUX_MODE7) /* (K17) gmii1_txd0.gpio0[28] (WR EN PIN) */
+		>;
+	};
+
+	uart4_pins_default: uart4_pins_default {
+		pinctrl-single,pins = <
+			AM33XX_IOPAD(0x91c, PIN_INPUT_PULLUP | MUX_MODE3) /* (J18) gmii1_txd3.uart4_rxd */
+			AM33XX_IOPAD(0x920, PIN_OUTPUT_PULLUP | MUX_MODE3) /* (K15) gmii1_txd2.uart4_txd */
+		>;
+	};
+
+	uart5_pins_default: uart5_pins_default {
+		pinctrl-single,pins = <
+			AM33XX_IOPAD(0x948, PIN_INPUT_PULLUP | MUX_MODE2) /* (M17) mdio_data.uart5_rxd */
+			AM33XX_IOPAD(0x94c, PIN_OUTPUT_PULLUP | MUX_MODE2) /* (M18) mdio_clk.uart5_txd */
+		>;
+	};
+
+};
+
+
+&uart1 {
+	pinctrl-names = "default";
+	pinctrl-0 = <&uart1_pins_default>;
+
+	status = "okay";
+};
+
+&uart2 {
+	pinctrl-names = "default";
+	pinctrl-0 = <&uart2_pins_default>;
+
+	status = "okay";
+};
+
+/* RS485 */
+&uart3 {
+	pinctrl-names = "default";
+	pinctrl-0 = <&uart3_pins_default>;
+	rts-gpio = <&gpio0 28 GPIO_ACTIVE_HIGH>;
+	rs485-rts-delay =<1 1>;
+	rs485-rts-active-high;
+	/*rs485-rx-during-tx;*/
+	linux,rs485-enabled-at-boot-time;
+	status = "okay";
+};
+
+&uart4 {
+	pinctrl-names = "default";
+	pinctrl-0 = <&uart4_pins_default>;
+
+	status = "okay";
+};
+
+&uart5 {
+	pinctrl-names = "default";
+	pinctrl-0 = <&uart5_pins_default>;
+
+	status = "okay";
+};
+
+&i2c2 {
+	pinctrl-names = "default", "sleep";
+	pinctrl-0 = <&i2c2_pins_default>;
+	pinctrl-1 = <&i2c2_pins_sleep>;
+
+	status = "okay";
+	clock-frequency = <400000>;
+
+	tps: tps@2d {
+		compatible = "ti,tps65910";
+		reg = <0x2d>;
+	};
+
+};
+
+&usb0 {
+	//status = "disabled"; // Not used
+	status = "okay";
+	dr_mode = "otg";
+};
+
+&usb0_phy {
+    status = "okay";
+};
+
+&usb1 {
+	status = "okay";
+	dr_mode = "host";
+};
+
+&usb1_phy {
+    status = "okay";
+};
+
+/* Yes I know the indexing is different */
+
+&mmc1 {
+	status = "okay";
+	vmmc-supply = <&vmmc_fixed>;
+	pinctrl-names = "default";
+	pinctrl-0 = <&mmc0_pins_default>;
+	bus-width = <4>;
+    disable-wp;
+    max-frequency = <10000000>;
+};
+
+&mmc2 {
+	status = "okay";
+	vmmc-supply = <&vmmc_fixed>;
+	pinctrl-names = "default", "sleep";
+	pinctrl-0 = <&mmc1_pins_default>;
+	bus-width = <8>;
+    disable-wp;
+    max-frequency = <10000000>;
+};
+
+&mmc3 {
+	status = "okay";
+	vmmc-supply = <&vmmc_fixed>;
+	pinctrl-names = "default";
+	pinctrl-0 = <&mmc2_pins_default>;
+	bus-width = <8>;
+    disable-wp;
+    max-frequency = <10000000>;
+};
+
+
+
+&edma {
+	ti,edma-xbar-event-map = /bits/ 16 <1 12
+					    2 13>;
+};
+
+&sham {
+	status = "okay";
+};
+
+&aes {
+	status = "okay";
+};
+
+&wkup_m3_ipc {
+	ti,scale-data-fw = "am335x-evm-scale-data.bin";
+};
+
+&rtc {
+	system-power-controller;
+};

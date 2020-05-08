@@ -1,0 +1,140 @@
+1. Be on Linux
+
+2. Install crosstool-ng http://crosstool-ng.github.io/docs/
+
+3. Make a directory for crosstool-ng, it will spit out a .config file and little else
+
+4. Configure ct-ng (or use provided file)
+    $ ct-ng arm-cortex_a8-linux-gnueabi
+    $ ct-ng menuconfig
+    Enable hardware floating point
+    Pick linux kernel 4.13.16 (it has 4.14.99 but this seems to cause issues for the am335x 4.14.90 kernel)
+    Pick the newest glibc
+    The newest gcc should already be selected
+    Make sure to enable C++ support
+    You can turn off debug facilities
+    Turn on parallel make
+    Create a ~/src directory for caching if you plan to modify and rebuild many times
+    $ ct-ng build
+
+5. Utilize BeagleBone Black AM335X Das U-boot
+
+6. Configure appropriate Device Tree (am335x-mitysom-illinisat2.dts)
+
+6.1 Use the TI Pinmux Tool
+
+6.2 Use vendor provided schematics to cnofigure pin muxing
+
+NOTE: 141/143 UART5_TXD M18 instead of H18
+NOTE: We need to use the default devkit device tree to boot on the devkit but
+NOTE: when flashing the NAND, we need to flash the flight device tree
+
+7. Build the linux kernel, modules, device trees, and fit image according to these instructions: https://support.criticallink.com/redmine/projects/armc8-platforms/wiki/Linux_Kernel_(2018_April_MDK_Release)
+(or just use linux-config.txt)
+    Use Linux 4.14.90
+    Turn off Device Drivers > Graphics Support > DRM for TI LCD
+    Run `make zImage`
+
+8. Use https://support.criticallink.com/redmine/projects/armc8-platforms/wiki/Getting_Started_335x#(Updating your SD Card) to copy u-boot and zImage
+   Make sure to copy the am335x-mitysom-illinisat2.dtb to the same directory
+   Use our uEnv.txt
+
+9. Download buildrootfs
+   https://www.buildroot.org/
+
+10. Configure buildroot (or use buildroot-config.txt)
+    Make sure to target ARM, cortex-A8, EABIhf, VFPv3, ARM
+    Turn on parallel jobs and compiler caching
+    External toolchain, pre-installed, ~/x-tools/arm-cortex_a8-linux-gnueabi, arm-cortex_a8-linux-gnueabi, gcc 8.x, kernel headers 4.13.x, glibc
+    Enable C++ support
+    Disable root login with password
+    Enable run getty (login prompt) after boot
+    Disable remount root-filesystem
+
+11. Build root fs (don't add -j)
+    $ make
+
+12. Create 3 partitions on the SD card, sd1, sd2, sd3
+
+13. Copy the following to sd1
+    am335x-mitysom-illinisat2.dtb
+    MLO
+    u-boot.img
+    uEnv.txt
+    zImage
+
+14. Copy the following to sd2
+    Unzipped rootfs and linux kernel modules
+
+15. Cope the following to sd3 and run
+    ubinize.cfg
+    mkfs.ubifs -r ../sd2/ -F -o ubifs.img -m 4096 -e 253952 -c 1580
+    ubinize -o ubi.img -m 4096 -p 256KiB -s 4096 -O 4096 ubinize.cfg
+
+16. Make sure to run sync in each partition before unmounting
+
+Boot pin configurations:
+
+Boot from NAND:
+Pins 2,3,8,9,10,11
+BOOTCONFIG [0..11]
+::[:][:]::::[:][:][:][:]
+
+Boot from MMC: <- want to do this
+Pins 3
+BOOTCONFIG [0..11]
+:::[:]::::::::
+
+17. Boot
+    Put daughter card in devkit
+    Put SD card in devkit and power on
+    Catch prompt to enter u-boot
+    u-boot should have a recent timestamp from when you built it
+    U-Boot# env default -a
+    U-Boot# fatload mmc 0 0x81000000 uEnv.txt
+    U-Boot# env import -t 0x81000000 $filesize
+    U-Boot# saveenv
+    U-Boot# run mmc_boot
+    Login with root, no password
+
+18. Flash NAND from Linux
+    $ cd /
+    $ ./flash.sh
+    make /mnt/sd1, /mnt/sd3, /mnt/card
+    mount /dev/mmcblk0p1 into /mnt/sd1
+    mount /dev/mmcblk0p3 into /mnt/sd3
+    $ cd /mnt/sd1
+    $ flash_erase /dev/mtd1 0 0
+    $ nandwrite -p /dev/mtd1 MLO
+    $ flash_erase /dev/mtd2 0 0
+    $ nandwrite -p /dev/mtd2 MLO
+    $ flash_erase /dev/mtd3 0 0
+    $ nandwrite -p /dev/mtd3 MLO
+    $ flash_erase /dev/mtd4 0 0
+    $ nandwrite -p /dev/mtd4 MLO
+    $ flash_erase /dev/mtd5 0 0
+    $ nandwrite -p /dev/mtd5 u-boot.img
+    $ flash_erase /dev/mtd6 0 0
+    $ nandwrite -p /dev/mtd6 uEnv.txt
+    $ flash_erase /dev/mtd7 0 0
+    $ nandwrite -p /dev/mtd7 zImage
+    $ flash_erase /dev/mtd8 0 0
+    $ nandwrite -p /dev/mtd8 am335x-mitysom-illinisat2.dtb
+    $ cd /mnt/sd3
+    $ ubiformat /dev/mtd9 -f ubi.img -s 4096 -O 4096
+    $ ubiattach -m 9 -O 4096
+    $ mount -t ubifs ubi0_0 /mnt/card
+    $ sync # run everywhere
+    $ reboot
+    (Don't remove the SD card until verifying the boot from NAND step)
+    https://support.criticallink.com/redmine/projects/armc8-platforms/wiki/UBIFS_Nand_Boot#Flashing-Nand-from-Linux-2
+
+19. Booting from NAND
+    Yes these first commands are the same as before, still need to run them again
+    U-Boot# env default -a
+    U-Boot# fatload mmc 0 0x81000000 uEnv.txt
+    U-Boot# env import -t 0x81000000 $filesize
+    U-Boot# saveenv
+    U-Boot# run nand_boot
+    https://support.criticallink.com/redmine/projects/armc8-platforms/wiki/UBIFS_Nand_Boot#Booting-from-Nand-2
+
